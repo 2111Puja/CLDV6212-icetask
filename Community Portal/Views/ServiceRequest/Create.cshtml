@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Report a Problem";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card card-custom shadow-sm border-0">
+            <div class="card-header bg-navy text-white p-3">
+                <h4 class="mb-0">Report a Community Problem</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-controller="ServiceRequest" asp-action="Create" method="post" enctype="multipart/form-data">
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Issue Type</label>
+                        <select name="issueType" class="form-select" required>
+                            <option value="">-- Select Issue Type --</option>
+                            <option value="Water Leak">Water Leak / Pipe Burst</option>
+                            <option value="Pothole">Pothole / Road Repair</option>
+                            <option value="Streetlight">Broken Streetlight</option>
+                            <option value="Waste">Uncollected Refuse / Illegal Dumping</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Description</label>
+                        <textarea name="description" class="form-control" rows="4" placeholder="Provide details about the issue..." required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Location Address</label>
+                        <input type="text" name="location" class="form-control" placeholder="Enter street address or landmark" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Upload Photo (Optional)</label>
+                        <input type="file" name="photo" class="form-control" accept="image/*" />
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-azure btn-lg">Submit Report</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

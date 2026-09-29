@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Community Portal/Community Portal.csproj" />
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+</Solution>

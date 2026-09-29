@@ -1,0 +1,25 @@
+name: CI/CD Build & Test Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore Dependencies
+        run: dotnet restore src\CommunityPortal.Web\CommunityPortal.Web.csproj
+
+      - name: Build Project
+        run: dotnet build src\CommunityPortal.Web\CommunityPortal.Web.csproj --no-restore -c Release

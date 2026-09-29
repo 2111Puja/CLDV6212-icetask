@@ -1,0 +1,110 @@
+﻿@{
+    ViewData["Title"] = "Track Your Report";
+    
+    // Demo state check for prototype representation
+    var referenceNumber = ViewData["ReferenceNumber"] as string;
+    var hasSearched = !string.IsNullOrEmpty(referenceNumber);
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-9 col-md-11">
+        
+        <!-- Header & Search Box -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4 text-center">
+                <h3 class="fw-bold text-navy mb-2">Track Your Report</h3>
+                <p class="text-muted mb-4">Enter your municipal reference number to check the live status of your request.</p>
+
+                <form asp-controller="ServiceRequest" asp-action="Track" method="get" class="row g-2 justify-content-center">
+                    <div class="col-sm-7 col-md-6">
+                        <input type="text" name="referenceNumber" class="form-control form-control-lg border-primary" 
+                               placeholder="e.g., RPT-2026-000123" value="@referenceNumber" required />
+                    </div>
+                    <div class="col-sm-auto">
+                        <button type="submit" class="btn btn-azure btn-lg px-4 w-100">Track Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        @if (hasSearched)
+        {
+            <!-- Results Section -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light p-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="text-muted small d-block">Reference Number</span>
+                        <strong class="fs-5 text-navy">@referenceNumber</strong>
+                    </div>
+                    <div>
+                        <span class="badge bg-warning text-dark px-3 py-2 fs-6">In Progress</span>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    
+                    <!-- Progress Stepper -->
+                    <h6 class="fw-bold text-uppercase text-muted mb-4">Resolution Progress</h6>
+                    <div class="position-relative mb-5 px-3">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-between position-relative" style="margin-top: -18px;">
+                            <div class="text-center">
+                                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                    <i class="bi bi-check-lg">✓</i>
+                                </div>
+                                <div class="fw-bold mt-2 small">Submitted</div>
+                                <div class="text-muted extra-small">18 May 2026, 10:30 AM</div>
+                            </div>
+
+                            <div class="text-center">
+                                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                    <i class="bi bi-gear-fill">⚙</i>
+                                </div>
+                                <div class="fw-bold mt-2 small text-primary">In Progress</div>
+                                <div class="text-muted extra-small">19 May 2026, 08:15 AM</div>
+                            </div>
+
+                            <div class="text-center">
+                                <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                    3
+                                </div>
+                                <div class="fw-bold mt-2 small text-muted">Resolved</div>
+                                <div class="text-muted extra-small">Pending completion</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4" />
+
+                    <!-- Issue Details Summary -->
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">ISSUE TYPE</label>
+                            <p class="fw-medium text-dark">Water Leak / Pipe Burst</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">LOCATION</label>
+                            <p class="fw-medium text-dark">123 Main Road, Example Town</p>
+                        </div>
+                        <div class="col-12">
+                            <label class="text-muted small fw-bold">DESCRIPTION</label>
+                            <p class="fw-medium text-dark">There is a significant water leak on the main road near the community center flooding the pavement.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- Informational Placeholder -->
+            <div class="card border-0 bg-light p-4 text-center">
+                <p class="text-muted mb-0">Enter a valid reference number above to view real-time municipal status updates, assigned work crews, and completion records[cite: 1].</p>
+            </div>
+        }
+
+    </div>
+</div>

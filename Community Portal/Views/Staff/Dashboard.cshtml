@@ -1,0 +1,46 @@
+﻿@model IEnumerable<CommunityPortal.Web.Models.ServiceRequest>
+
+@{
+    ViewData["Title"] = "Staff Dashboard";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Municipality Staff Dashboard</h2>
+        <span class="badge bg-secondary">Total Reports: @Model.Count()</span>
+    </div>
+
+    <div class="table-responsive card shadow-sm">
+        <table class="table table-hover mb-0 align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Reference</th>
+                    <th>Issue Type</th>
+                    <th>Location</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><strong>@item.ReferenceNumber</strong></td>
+                        <td>@item.IssueType</td>
+                        <td>@item.Location</td>
+                        <td>
+                            <span class="badge @(item.Priority == CommunityPortal.Web.Models.PriorityLevel.Urgent ? "bg-danger" : "bg-info")">
+                                @item.Priority
+                            </span>
+                        </td>
+                        <td><span class="badge bg-secondary">@item.Status</span></td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.ReferenceNumber" class="btn btn-sm btn-outline-primary">View / Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
