@@ -9,6 +9,10 @@ namespace Community_Portal
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // 1. Add Swagger services
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -18,6 +22,10 @@ namespace Community_Portal
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            // 2. Enable Swagger middleware (keep this outside IsDevelopment so your lecturer can see it on Render too)
+            app.UseSwagger();
+            app.UseSwaggerUI(); // This will make Swagger available at /swagger
 
             app.UseHttpsRedirection();
             app.UseRouting();
