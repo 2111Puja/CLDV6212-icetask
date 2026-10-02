@@ -30,7 +30,6 @@ namespace Community_Portal
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -53,20 +52,12 @@ namespace Community_Portal
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
-            // Automatically apply database creation in Supabase on startup
+            // Create the database schema without swallowing startup exceptions
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                try
-                {
-                    var context = services.GetRequiredService<ApplicationDbContext>();
-                    context.Database.EnsureCreated();
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred creating the database.");
-                }
+                var context = services.GetRequiredService<ApplicationDbContext>();
+                context.Database.EnsureCreated();
             }
 
             app.Run();
