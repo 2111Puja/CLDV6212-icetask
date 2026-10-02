@@ -154,7 +154,7 @@ On every push or pull request to the `main` branch, the pipeline automatically:
 | Member           | Main Contributions                                                                                                                                                             |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Puja Mahabir** | Full-stack MVC architecture, Supabase PostgreSQL database integration, Docker containerisation, Swashbuckle Swagger API documentation setup, and CI/CD workflow configuration. |
-| **Aminah Omer**  | Problem statement research, frontend views design, Docker containerisation, system structure documentation, and user workflow implementation.                                                           |
+| **Aminah Omer**  | Problem statement research, frontend views design, Docker containerisation, system structure documentation, readme and user workflow implementation.                                                           |
 
 ### 🤝 Contribution Workflow
 
