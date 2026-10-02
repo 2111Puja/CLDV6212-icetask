@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+/* Microsoft. 2026. ASP.NET Core MVC Controllers and Action Results Overview. [Online].
+ * Available at: <https://learn.microsoft.com/en-us/aspnet/core/mvc/controllers/actions>
+ * [Accessed 2 October 2026].*/
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace Community_Portal.Controllers
 {
