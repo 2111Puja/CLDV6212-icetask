@@ -1,4 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+/* Microsoft. 2026. ASP.NET Core MVC Controllers and Action Results Overview. [Online].
+ * Available at: <https://learn.microsoft.com/en-us/aspnet/core/mvc/controllers/actions>
+ * [Accessed 2 October 2026].
+ * 
+ * Microsoft. 2026. Model Binding in ASP.NET Core. [Online].
+ * Available at: <https://learn.microsoft.com/en-us/aspnet/core/mvc/models/model-binding>
+ * [Accessed 2 October 2026].*/
+
+using Microsoft.AspNetCore.Mvc;
 using CommunityPortal.Web.Models;
 
 namespace Community_Portal.Controllers
