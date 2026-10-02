@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Community_Portal.Data;
+
 namespace Community_Portal
 {
     public class Program
@@ -8,6 +11,10 @@ namespace Community_Portal
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Register Supabase (PostgreSQL) Database Context
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // 1. Add Swagger services
             builder.Services.AddEndpointsApiExplorer();
