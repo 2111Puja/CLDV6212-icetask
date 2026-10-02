@@ -23,9 +23,13 @@ namespace Community_Portal
                 app.UseHsts();
             }
 
-            // 2. Enable Swagger middleware (keep this outside IsDevelopment so your lecturer can see it on Render too)
+            // 2. Enable Swagger middleware explicitly with production endpoints
             app.UseSwagger();
-            app.UseSwaggerUI(); // This will make Swagger available at /swagger
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Community Portal API v1");
+                c.RoutePrefix = "swagger"; // Keeps it accessible at /swagger
+            });
 
             app.UseHttpsRedirection();
             app.UseRouting();
