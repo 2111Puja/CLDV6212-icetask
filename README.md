@@ -92,9 +92,11 @@ Secrets for deployment are stored in **GitHub Repository Secrets**, not in the c
 
 ## 6. Team and Contributions
 
-| Member | Main contributions |
-|--------|--------------------|
-| Puja Mahabir |  |
-| Aminah Omer |  |
+## Group Members & Contributions
+
+| Member | Main Contributions |
+| :--- | :--- |
+| **Puja Mahabir** | Full-stack .NET 10 MVC architecture, Entity Framework Core, Supabase PostgreSQL database integration, Docker containerisation, root docker-compose orchestration, Swashbuckle Swagger API documentation, GitHub Actions CI/CD pipeline configuration, and Render cloud deployment. |
+| **Aminah Omer** | Problem statement research, target user analysis, and documentation and presentation support. |
 
 All work is done on feature branches and merged through reviewed Pull Requests.
