@@ -76,10 +76,17 @@ The Community Portal was successfully deployed using **Docker and Render**, with
 ### 🌐 Live Application
 
 The deployed application is accessible at:
-
 **https://cldv6212-community-portal.onrender.com/**
+<img width="1905" height="850" alt="image" src="https://github.com/user-attachments/assets/8033b761-d473-4787-b4be-43e88ad71456" />
 
-<!-- Add your live application screenshot here -->
+<img width="1917" height="862" alt="image" src="https://github.com/user-attachments/assets/de7df77f-ef87-4ed0-84de-69f86f8f61c5" />
+
+<img width="1912" height="842" alt="image" src="https://github.com/user-attachments/assets/cb16ac02-9030-4ad7-ac08-0008cf1cd3f5" />
+
+<img width="1867" height="842" alt="image" src="https://github.com/user-attachments/assets/305c38fb-24e2-48b2-82e7-92fe9f86c56c" />
+
+<img width="1917" height="847" alt="image" src="https://github.com/user-attachments/assets/61df1320-fae3-4c7f-9b5f-17ab2474dcd8" />
+
 
 ### 📖 Swagger API
 
@@ -87,19 +94,20 @@ The Swagger API documentation is available through the deployed application:
 
 **https://cldv6212-community-portal.onrender.com/swagger**
 
-<!-- Add your Swagger screenshot here -->
-
 ### ☁️ Render Deployment
 
 The application is deployed and running on Render.
 
-<!-- Add your Render deployment screenshot here -->
+
+<img width="1478" height="272" alt="Screenshot 2026-10-03 150531" src="https://github.com/user-attachments/assets/e1e89fe2-035d-41f9-aaf6-f89a4e5725dd" />
+
+<img width="1917" height="797" alt="Screenshot 2026-10-03 151340" src="https://github.com/user-attachments/assets/da970ed9-e648-4228-9217-9093dae56ec6" />
 
 ### 🗄️ Supabase PostgreSQL
 
 The application uses Supabase PostgreSQL as its cloud database.
 
-<!-- Add your Supabase screenshot here -->
+<img width="1915" height="341" alt="Screenshot 2026-10-03 152517" src="https://github.com/user-attachments/assets/7d268011-47c7-4e52-8d73-6c3afb526b02" />
 
 ---
 
