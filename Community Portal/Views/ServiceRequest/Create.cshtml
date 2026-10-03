@@ -1,0 +1,68 @@
+@model CreateServiceRequestViewModel
+@{
+    ViewData["Title"] = "Report a Problem";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card card-custom border-0">
+            <div class="card-header bg-navy text-white p-4">
+                <h1 class="h4 mb-1"><i class="bi bi-megaphone-fill me-2"></i>Report a Community Problem</h1>
+                <p class="mb-0 small text-white-50">Tell us what is wrong and where. You will receive a reference number to track the repair.</p>
+            </div>
+            <div class="card-body p-4">
+                <form asp-controller="ServiceRequest" asp-action="Create" method="post" enctype="multipart/form-data"
+                      data-loading-text="Submitting report..." novalidate>
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="IssueType" class="form-label"></label>
+                        <select asp-for="IssueType" class="form-select">
+                            <option value="">-- Select issue type --</option>
+                            @foreach (var issue in CreateServiceRequestViewModel.IssueTypes)
+                            {
+                                <option value="@issue" selected="@(Model.IssueType == issue)">@issue</option>
+                            }
+                        </select>
+                        <span asp-validation-for="IssueType" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="4" maxlength="2000"
+                                  placeholder="What is the problem? How serious is it? Is anyone at risk?" data-counter="descCounter"></textarea>
+                        <div class="d-flex justify-content-between">
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                            <span id="descCounter" class="field-hint ms-auto"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Location" class="form-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="bi bi-geo-alt-fill text-danger"></i></span>
+                            <input asp-for="Location" class="form-control" maxlength="250" placeholder="Street address, intersection or landmark" />
+                        </div>
+                        <span asp-validation-for="Location" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Photo" class="form-label"></label>
+                        <input asp-for="Photo" type="file" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp" />
+                        <div class="form-text">JPEG, PNG, GIF or WebP, up to 4 MB. A photo helps crews find and fix the problem faster.</div>
+                        <span asp-validation-for="Photo" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-azure btn-lg"><i class="bi bi-send-fill me-2"></i>Submit Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,127 @@
+@model TrackViewModel
+@{
+    ViewData["Title"] = "Track Your Report";
+    var request = Model.Request;
+    string StepClass(int step) =>
+        request is null ? "" :
+        request.StatusStep > step ? "completed" :
+        request.StatusStep == step ? (step == 2 ? "completed active done-final" : "completed active") : "";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-9 col-md-11">
+
+        <!-- Header & Search Box -->
+        <div class="card card-custom border-0 mb-4">
+            <div class="card-body p-4 text-center">
+                <h1 class="h3 fw-bold text-navy mb-2">Track Your Report</h1>
+                <p class="text-muted mb-4">Enter your reference number to check the live status of your request.</p>
+
+                <form asp-controller="ServiceRequest" asp-action="Track" method="get" class="row g-2 justify-content-center">
+                    <div class="col-sm-7 col-md-6">
+                        <input type="text" name="referenceNumber" class="form-control form-control-lg" maxlength="30"
+                               placeholder="e.g., RPT-2026-123456" value="@Model.Query" required autocomplete="off" />
+                    </div>
+                    <div class="col-sm-auto">
+                        <button type="submit" class="btn btn-azure btn-lg px-4 w-100"><i class="bi bi-search me-1"></i>Track</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        @if (Model.Error is not null)
+        {
+            <div class="alert alert-warning shadow-sm"><i class="bi bi-exclamation-triangle-fill me-2"></i>@Model.Error</div>
+        }
+        else if (Model.Searched && request is null)
+        {
+            <div class="card card-custom border-0 mb-4">
+                <div class="empty-state">
+                    <i class="bi bi-question-circle"></i>
+                    <h2 class="h5 fw-bold text-navy mt-3">No report found for "@Model.Query"</h2>
+                    <p class="mb-0">Please check the reference number (it looks like <code>RPT-2026-123456</code>) and try again.</p>
+                </div>
+            </div>
+        }
+        else if (request is not null)
+        {
+            <!-- Results Section -->
+            <div class="card card-custom border-0 mb-4">
+                <div class="card-header bg-white p-3 d-flex flex-wrap gap-2 justify-content-between align-items-center">
+                    <div>
+                        <span class="detail-label d-block">Reference Number</span>
+                        <span class="reference-chip fs-5">@request.ReferenceNumber</span>
+                        <button type="button" class="btn btn-sm btn-link text-decoration-none no-print" data-copy="@request.ReferenceNumber"><i class="bi bi-clipboard"></i> Copy</button>
+                    </div>
+                    <span class="badge @BadgeHelper.Status(request.Status) fs-6">@request.StatusDisplayName</span>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Progress Stepper -->
+                    <h2 class="detail-label mb-3">Resolution Progress</h2>
+                    <div class="stepper-wrapper mb-4">
+                        <div class="stepper-item @StepClass(0)">
+                            <div class="step-counter"><i class="bi bi-check-lg"></i></div>
+                            <div class="step-name">Received</div>
+                            <div class="small text-muted">@request.SubmittedOnLocal.ToString("dd MMM yyyy, HH:mm")</div>
+                        </div>
+                        <div class="stepper-item @StepClass(1)">
+                            <div class="step-counter">@if (request.StatusStep >= 1) { <i class="bi bi-gear-fill"></i> } else { <span>2</span> }</div>
+                            <div class="step-name">In Progress</div>
+                            <div class="small text-muted">@(request.StatusStep >= 1 ? "Crew assigned" : "Waiting")</div>
+                        </div>
+                        <div class="stepper-item @StepClass(2)">
+                            <div class="step-counter">@if (request.StatusStep >= 2) { <i class="bi bi-check-lg"></i> } else { <span>3</span> }</div>
+                            <div class="step-name">Resolved</div>
+                            <div class="small text-muted">@(request.StatusStep >= 2 && request.UpdatedOnLocal is not null ? request.UpdatedOnLocal.Value.ToString("dd MMM yyyy, HH:mm") : "Pending completion")</div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4" />
+
+                    <!-- Issue Details Summary -->
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="detail-label">Issue Type</div>
+                            <p class="detail-value">@request.IssueType</p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-label">Location</div>
+                            <p class="detail-value">@request.Location</p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-label">Assigned Team</div>
+                            <p class="detail-value">@request.AssignedTeam</p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-label">Priority</div>
+                            <p class="detail-value"><span class="badge @BadgeHelper.Priority(request.Priority)">@request.Priority</span></p>
+                        </div>
+                        <div class="col-12">
+                            <div class="detail-label">Description</div>
+                            <p class="detail-value mb-0">@request.Description</p>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(request.StaffNotes))
+                        {
+                            <div class="col-12">
+                                <div class="alert alert-info mb-0 mt-2">
+                                    <div class="detail-label mb-1">Update from the municipality</div>
+                                    @request.StaffNotes
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- Informational Placeholder -->
+            <div class="card border-0 bg-white shadow-sm p-4 text-center">
+                <p class="text-muted mb-2">Enter a valid reference number above to view real-time status updates and completion notes.</p>
+                <div><a asp-action="Create" class="btn btn-sm btn-outline-navy">Haven't reported yet? Report a problem</a></div>
+            </div>
+        }
+
+    </div>
+</div>

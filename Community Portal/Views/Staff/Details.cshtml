@@ -1,0 +1,87 @@
+@model ServiceRequest
+@{
+    ViewData["Title"] = "Request Details";
+    var teams = (IEnumerable<string>)ViewBag.Teams;
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Dashboard">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.ReferenceNumber</li>
+            </ol>
+        </nav>
+
+        <div class="card card-custom border-0">
+            <div class="card-header bg-navy text-white p-3 d-flex flex-wrap gap-2 justify-content-between align-items-center">
+                <h1 class="h5 mb-0">Manage Report: @Model.ReferenceNumber</h1>
+                <span class="badge @BadgeHelper.Status(Model.Status)">@Model.StatusDisplayName</span>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3 mb-2">
+                    <div class="col-md-6"><div class="detail-label">Issue category</div><p class="detail-value">@Model.IssueType</p></div>
+                    <div class="col-md-6"><div class="detail-label">Location</div><p class="detail-value">@Model.Location</p></div>
+                    <div class="col-md-6"><div class="detail-label">Submitted</div><p class="detail-value">@Model.SubmittedOnLocal.ToString("dd MMM yyyy, HH:mm")</p></div>
+                    <div class="col-md-6"><div class="detail-label">Last updated</div><p class="detail-value">@(Model.UpdatedOnLocal?.ToString("dd MMM yyyy, HH:mm") ?? "Not yet updated")</p></div>
+                    <div class="col-12"><div class="detail-label">Description</div><p class="detail-value">@Model.Description</p></div>
+                    @if (Model.HasPhoto)
+                    {
+                        <div class="col-12">
+                            <div class="detail-label mb-2">Photo from resident</div>
+                            <a asp-controller="ServiceRequest" asp-action="Photo" asp-route-id="@Model.ReferenceNumber" target="_blank">
+                                <img src="@Url.Action("Photo", "ServiceRequest", new { id = Model.ReferenceNumber })" alt="Photo submitted with the report"
+                                     class="img-fluid rounded border" style="max-height:320px" />
+                            </a>
+                        </div>
+                    }
+                </div>
+
+                <hr />
+
+                <form asp-controller="Staff" asp-action="UpdateStatus" method="post" data-loading-text="Saving...">
+                    <input type="hidden" name="referenceNumber" value="@Model.ReferenceNumber" />
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="status" class="form-label">Status</label>
+                            <select id="status" name="status" class="form-select">
+                                @foreach (var option in Enum.GetValues<RequestStatus>())
+                                {
+                                    <option value="@((int)option)" selected="@(option == Model.Status)">@(option == RequestStatus.InProgress ? "In Progress" : option.ToString())</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="priority" class="form-label">Priority</label>
+                            <select id="priority" name="priority" class="form-select">
+                                @foreach (var option in Enum.GetValues<PriorityLevel>())
+                                {
+                                    <option value="@((int)option)" selected="@(option == Model.Priority)">@option</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="assignedTeam" class="form-label">Assigned team</label>
+                            <select id="assignedTeam" name="assignedTeam" class="form-select">
+                                @foreach (var team in teams)
+                                {
+                                    <option value="@team" selected="@(team == Model.AssignedTeam)">@team</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="staffNotes" class="form-label">Staff notes / resolution comments</label>
+                            <textarea id="staffNotes" name="staffNotes" class="form-control" rows="3" maxlength="2000"
+                                      placeholder="Visible to the resident on the tracking page">@Model.StaffNotes</textarea>
+                        </div>
+                        <div class="col-12 d-flex gap-2 mt-3">
+                            <button type="submit" class="btn btn-azure"><i class="bi bi-check2-circle me-1"></i>Save changes</button>
+                            <a asp-action="Dashboard" class="btn btn-outline-secondary">Back to dashboard</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

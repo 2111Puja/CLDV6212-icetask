@@ -1,0 +1,101 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Staff Dashboard";
+    var pills = new (string Key, string Label, int Count)[]
+    {
+        ("All", "All", Model.Total),
+        ("New", "New", Model.New),
+        ("InProgress", "In Progress", Model.InProgress),
+        ("Resolved", "Resolved", Model.Resolved)
+    };
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <div>
+        <h1 class="h3 fw-bold text-navy mb-0">Municipality Staff Dashboard</h1>
+        <p class="text-muted mb-0">Review, prioritise and update community service requests.</p>
+    </div>
+    <a asp-action="Dashboard" class="btn btn-outline-navy btn-sm"><i class="bi bi-arrow-clockwise me-1"></i>Refresh</a>
+</div>
+
+@if (Model.LoadError is not null)
+{
+    <div class="alert alert-danger shadow-sm"><i class="bi bi-exclamation-octagon-fill me-2"></i>@Model.LoadError</div>
+}
+
+<!-- KPI cards -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3"><div class="kpi-card p-3"><div class="kpi-label">Total reports</div><div class="kpi-value">@Model.Total</div></div></div>
+    <div class="col-6 col-lg-3"><div class="kpi-card kpi-progress p-3"><div class="kpi-label">New / pending</div><div class="kpi-value">@Model.New</div></div></div>
+    <div class="col-6 col-lg-3"><div class="kpi-card kpi-progress p-3"><div class="kpi-label">In progress</div><div class="kpi-value">@Model.InProgress</div></div></div>
+    <div class="col-6 col-lg-3"><div class="kpi-card kpi-resolved p-3"><div class="kpi-label">Resolved</div><div class="kpi-value">@Model.Resolved</div></div></div>
+</div>
+
+@if (Model.Urgent > 0)
+{
+    <div class="alert alert-danger d-flex align-items-center shadow-sm" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+        <div><strong>@Model.Urgent urgent @(Model.Urgent == 1 ? "request needs" : "requests need")</strong> attention.</div>
+    </div>
+}
+
+<div class="card card-custom border-0">
+    <div class="card-header bg-white p-3 d-flex flex-wrap gap-3 justify-content-between align-items-center">
+        <nav class="nav nav-pills filter-pills gap-1">
+            @foreach (var pill in pills)
+            {
+                <a class="nav-link @(Model.Filter.Equals(pill.Key, StringComparison.OrdinalIgnoreCase) ? "active" : "")"
+                   asp-action="Dashboard" asp-route-statusFilter="@pill.Key" asp-route-search="@Model.Search">
+                    @pill.Label <span class="opacity-75">(@pill.Count)</span>
+                </a>
+            }
+        </nav>
+        <form method="get" asp-action="Dashboard" class="d-flex gap-2">
+            <input type="hidden" name="statusFilter" value="@Model.Filter" />
+            <input type="search" name="search" value="@Model.Search" class="form-control form-control-sm" placeholder="Search reference, type, location" style="min-width:240px" />
+            <button class="btn btn-azure btn-sm" type="submit"><i class="bi bi-search"></i></button>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-portal mb-0 align-middle">
+            <thead>
+                <tr>
+                    <th>Reference</th>
+                    <th>Submitted</th>
+                    <th>Issue Type</th>
+                    <th>Location</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Team</th>
+                    <th class="text-end">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Requests)
+                {
+                    <tr>
+                        <td><strong class="text-navy">@item.ReferenceNumber</strong>@if (item.HasPhoto) { <i class="bi bi-image ms-1 text-muted" title="Photo attached"></i> }</td>
+                        <td class="text-nowrap">@item.DateSubmitted</td>
+                        <td>@item.IssueType</td>
+                        <td>@item.Location</td>
+                        <td><span class="badge @BadgeHelper.Priority(item.Priority)">@item.Priority</span></td>
+                        <td><span class="badge @BadgeHelper.Status(item.Status)">@item.StatusDisplayName</span></td>
+                        <td>@item.AssignedTeam</td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@item.ReferenceNumber" class="btn btn-sm btn-outline-navy">View / Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Requests.Any() && Model.LoadError is null)
+    {
+        <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <p class="mt-2 mb-0">@(Model.Total == 0 ? "No reports have been submitted yet." : "No reports match your filter.")</p>
+        </div>
+    }
+</div>

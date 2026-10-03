@@ -1,0 +1,6 @@
+services:
+  communityportal:
+    image: ${DOCKER_REGISTRY-}communityportal
+    build:
+      context: .
+      dockerfile: Community Portal/Dockerfile
