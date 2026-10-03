@@ -1,102 +1,282 @@
-# Community Portal: Service Request System
+# 🏘️ Community Portal: Service Request System
 
-A web application that lets residents report community problems (water leaks, potholes, broken streetlights) and lets municipal staff track and resolve them.
+A web application that allows residents to report community problems such as **water leaks, potholes, and broken streetlights**, while enabling municipal staff to track, manage, and resolve service requests.
 
-**Live app:** [ADD LIVE URL HERE]
-> The free hosting tier sleeps when idle, so the first load can take up to a minute.
+**🌐 Live App:** https://cldv6212-community-portal.onrender.com/
 
----
+**📖 API Documentation (Swagger):** https://cldv6212-community-portal.onrender.com/swagger
+*Locally: `http://localhost:8080/swagger`*
 
-## 1. The Problem
-
-Residents often have no simple way to report faults in their area, and no way to find out whether anyone is dealing with them. Reports get lost between phone calls, emails and walk-ins, and municipal teams struggle to see what is urgent, who is responsible, and what has been fixed.
-
-**Who it affects**
-- **Residents**, who need an easy way to report an issue and follow its progress.
-- **Municipal staff**, who need one place to see, prioritise, assign and update requests.
-- **Local government**, which needs accountability and a record of response times.
-
-**Why it matters:** unresolved infrastructure problems such as burst pipes and potholes affect safety, cost more the longer they are ignored, and reduce public trust. A transparent tracking system closes the loop between the person reporting and the team fixing.
-
-**How the app helps**
-- Residents submit a report (issue type, description, location) and get a **reference number** to track it.
-- Residents can look up the status of any request with that reference number.
-- Staff log in to a **dashboard** showing all requests, filterable by status (Pending, In Progress, Resolved).
-- Staff open a request to update its **status, priority, assigned team and notes**.
-
-> [Add 1-2 sources or statistics from your research here to back up the problem statement.]
+> ⚠️ **Note:** The free hosting tier sleeps when idle, so the first load can take up to a minute.
 
 ---
 
-## 2. Architecture
+## 📝 1. The Problem
 
-[UPDATE this section to match the final design. The description below is the current structure.]
+Residents often have no simple way to report faults in their area or find out whether anyone is dealing with them. Reports can get lost between phone calls, emails, and walk-ins, while municipal teams struggle to see what is urgent, who is responsible, and what has been fixed.
 
-```
+### 👥 Who It Affects
+
+* **Residents**, who need an easy way to report an issue and follow its progress.
+* **Municipal staff**, who need one place to see, prioritise, assign, and update requests.
+* **Local government**, which needs accountability and a record of response times.
+
+### 💡 Why It Matters
+
+Unresolved infrastructure problems such as burst pipes and potholes can affect safety, cost more the longer they are ignored, and reduce public trust.
+
+A transparent tracking system helps close the loop between the person reporting the issue and the team responsible for fixing it.
+
+### ✅ How the App Helps
+
+* Residents submit a report containing the **issue type, description, and location** and receive a **reference number** to track it.
+* Residents can look up the status of any request using its **reference number**.
+* Staff log in to a **dashboard** displaying all requests, which can be filtered by status:
+
+  * 🟡 Pending
+  * 🔵 In Progress
+  * 🟢 Resolved
+* Staff can open a request and update its:
+
+  * **Status**
+  * **Priority**
+  * **Assigned team**
+  * **Notes**
+
+---
+
+## 🏗️ 2. Architecture
+
+```text
 Browser
    |
    v
-ASP.NET Core MVC app (Community Portal)   <-- Docker container
+ASP.NET Core MVC App (Community Portal)
+   <-- Docker Container (Render / Local)
    |
    v
-[Database: Neon / Supabase PostgreSQL]    <-- hosted free tier (live)
-[PostgreSQL container]                    <-- Docker Compose (local only)
+Database: Supabase PostgreSQL
+   <-- Hosted Cloud Instance
 ```
 
-| Component | Technology |
-|-----------|------------|
-| Web app | ASP.NET Core MVC, .NET 10 |
-| Database | [PostgreSQL, hosted free tier for live, container locally] |
-| Containers | Docker, Docker Compose |
-| CI/CD | GitHub Actions |
-| Hosting | [Render, free tier] |
+| Component     | Technology                                       |
+| ------------- | ------------------------------------------------ |
+| 🌐 Web App    | ASP.NET Core MVC, .NET 10, Swashbuckle (Swagger) |
+| 🗄️ Database  | Supabase PostgreSQL                              |
+| 🐳 Containers | Docker, Docker Compose                           |
+| ⚙️ CI/CD      | GitHub Actions                                   |
+| ☁️ Hosting    | Render (Free Tier)                               |
 
 ---
 
-## 3. Run Locally
+## 📸 3. Deployment Screenshots
 
-**Prerequisites:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) and Git.
+The Community Portal was successfully deployed using **Docker and Render**, with **Supabase PostgreSQL** used as the cloud database.
+
+### 🌐 Live Application
+
+The deployed application is accessible at:
+
+**https://cldv6212-community-portal.onrender.com/**
+
+<!-- Add your live application screenshot here -->
+
+### 📖 Swagger API
+
+The Swagger API documentation is available through the deployed application:
+
+**https://cldv6212-community-portal.onrender.com/swagger**
+
+<!-- Add your Swagger screenshot here -->
+
+### ☁️ Render Deployment
+
+The application is deployed and running on Render.
+
+<!-- Add your Render deployment screenshot here -->
+
+### 🗄️ Supabase PostgreSQL
+
+The application uses Supabase PostgreSQL as its cloud database.
+
+<!-- Add your Supabase screenshot here -->
+
+---
+
+## 🚀 4. Run Locally
+
+### Prerequisites
+
+Before running the application locally, make sure you have:
+
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+* Git
+
+### Clone the Repository
 
 ```bash
-git clone https://github.com/aminah-17/cloud-ice-task.git
-cd cloud-ice-task
-cp .env.example .env      # then edit the values in .env
+git clone https://github.com/2111Puja/CLDV6212-icetask.git
+cd CLDV6212-icetask
+```
+
+### Configure Environment Variables
+
+Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env` and enter the required values.
+
+### Start the Application
+
+```bash
 docker compose up --build
 ```
 
-Open **http://localhost:8080**.
+Once the containers have started, open:
 
-To stop the stack: `docker compose down`.
+**🌐 Application:** http://localhost:8080
 
----
+**📖 Swagger API Documentation:** http://localhost:8080/swagger
 
-## 4. Environment Variables
+### Stop the Application
 
-Copy `.env.example` to `.env` and fill in real values. Never commit `.env`.
+To stop the Docker stack:
 
-| Variable | Purpose |
-|----------|---------|
-| `ASPNETCORE_ENVIRONMENT` | Runtime environment (`Development` or `Production`) |
-| `ASPNETCORE_HTTP_PORTS` | Port the app listens on inside the container (`8080`) |
-| `ConnectionStrings__Default` | [Database connection string, once the database is set up] |
-
-Secrets for deployment are stored in **GitHub Repository Secrets**, not in the code.
+```bash
+docker compose down
+```
 
 ---
 
-## 5. CI/CD
+## 🔐 5. Environment Variables
 
-[Describe the GitHub Actions pipeline once it exists: build, tests, Docker build, security scan (CodeQL/Trivy), deploy on merge to `main`.]
+Copy `.env.example` to `.env` and fill in the required values.
+
+> ⚠️ **Never commit `.env` to the repository.**
+
+| Variable                               | Purpose                                                       |
+| -------------------------------------- | ------------------------------------------------------------- |
+| `ASPNETCORE_ENVIRONMENT`               | Runtime environment (`Development` or `Production`)           |
+| `ASPNETCORE_HTTP_PORTS`                | Port the application listens on inside the container (`8080`) |
+| `ConnectionStrings__DefaultConnection` | Supabase Session Pooler connection string                     |
+| `PORT`                                 | Set automatically by Render                                   |
+| `Staff__Username` / `Staff__Password`  | Municipality login credentials                                |
+
+Deployment secrets are stored securely in **GitHub Repository Secrets** and are not included in the source code.
 
 ---
 
-## 6. Team and Contributions
+## 🔄 6. CI/CD
 
-## Group Members & Contributions
+The project uses an automated **GitHub Actions** pipeline configured under:
+
+```text
+.github/workflows/
+```
+
+On every push or pull request to the `main` branch, the pipeline automatically:
+
+1. 📦 Restores dependencies and builds the ASP.NET Core solution.
+2. 🐳 Builds and validates the Docker container configuration.
+3. 🚀 Triggers deployment updates to Render after successful verification.
+
+---
+
+## 👩‍💻 7. Team and Contributions
 
 | Member | Main Contributions |
 | :--- | :--- |
 | **Puja Mahabir** | Full-stack .NET 10 MVC architecture, Entity Framework Core, Supabase PostgreSQL database integration, Docker containerisation, root docker-compose orchestration, Swashbuckle Swagger API documentation, GitHub Actions CI/CD pipeline configuration, and Render cloud deployment. |
-| **Aminah Omer** | Problem statement research, target user analysis, and documentation and presentation support. |
+| **Aminah Omer** | Problem statement research, target user analysis, documentation and presentation support. |
 
-All work is done on feature branches and merged through reviewed Pull Requests.
+### 🤝 Contribution Workflow
+
+All work is completed on **feature branches** and merged through reviewed **Pull Requests**.
+
+---
+
+## 📌 Project Links
+
+* 🌐 **[Live Application](https://cldv6212-community-portal.onrender.com/)**
+* 📖 **[Swagger API Documentation](https://cldv6212-community-portal.onrender.com/swagger)**
+* 💻 **[GitHub Repository](https://github.com/2111Puja/CLDV6212-icetask)**
+
+---
+
+## 🔑 8. Deploying on Render + Supabase
+
+> ⚠️ **Read this section if you get HTTP 500 errors during deployment.**
+
+### 1. Configure Supabase
+
+In **Supabase**, navigate to:
+
+**Project Settings → Database → Connection String → Session Pooler**
+
+Use the **Session Pooler** connection details for the deployed application.
+
+> ⚠️ **Do not use the Direct Connection host.** The Direct Connection uses IPv6, which can prevent Render from reaching the database.
+
+### 2. Configure Render Environment Variables
+
+In **Render → Your Service → Environment**, configure:
+
+| Key                                    | Value                                          |
+| -------------------------------------- | ---------------------------------------------- |
+| `ConnectionStrings__DefaultConnection` | Your Supabase Session Pooler connection string |
+| `Staff__Username`                      | Your staff login username                      |
+| `Staff__Password`                      | Your staff login password                      |
+
+A PostgreSQL connection URI can also be used.
+
+> 🔐 **Never commit database passwords or other secrets to the repository.**
+
+### 3. Deploy
+
+Deploy the application to Render.
+
+On startup, the application creates or upgrades the `ServiceRequests` table using idempotent SQL through `DatabaseInitializer`.
+
+No manual SQL or `EnsureCreated()` is required, even if the Supabase project already contains other tables.
+
+### 4. Verify
+
+Open the health endpoint:
+
+```text
+https://cldv6212-community-portal.onrender.com/health
+```
+
+A successful database connection returns:
+
+```json
+{"status":"healthy"}
+```
+
+If there is a database connection problem, the JSON response provides information about the issue. Full details are also available in the **Render logs**.
+
+### 🔑 Staff Login — Demo Defaults
+
+| Username                    | Password         |
+| --------------------------- | ---------------- |
+| `staff@municipality.gov.za` | `Municipal@2026` |
+
+These values can be overridden using the `Staff__Username` and `Staff__Password` environment variables on Render.
+
+### 🔌 REST API
+
+The following endpoints are documented in Swagger:
+
+```text
+GET  /api/service-requests/{referenceNumber}
+POST /api/service-requests
+```
+
+Swagger is available at:
+
+**https://cldv6212-community-portal.onrender.com/swagger**
+
+---
