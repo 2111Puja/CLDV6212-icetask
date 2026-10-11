@@ -1,3 +1,6 @@
+using Community_Portal.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace Community_Portal
 {
     public class Program
@@ -27,7 +30,7 @@ namespace Community_Portal
                 app.UseHsts();
             }
 
-            // 2. Enable Swagger middleware explicitly with production endpoints
+            // Enable Swagger middleware explicitly with production endpoints
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -49,14 +52,6 @@ namespace Community_Portal
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
-
-            // Create the database schema without swallowing startup exceptions
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var context = services.GetRequiredService<ApplicationDbContext>();
-                context.Database.EnsureCreated();
-            }
 
             app.Run();
         }
