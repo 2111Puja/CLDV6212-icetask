@@ -12,6 +12,9 @@ namespace Community_Portal
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // Register Swagger generator services
+            builder.Services.AddSwaggerGen();
+
             // Retrieve connection string from Render environment variables or configuration
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                                    ?? Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
