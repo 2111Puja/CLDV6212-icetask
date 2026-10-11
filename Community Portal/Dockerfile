@@ -18,4 +18,4 @@ RUN dotnet publish "Community Portal/Community Portal.csproj" -c $BUILD_CONFIGUR
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Community Portal.dll"]
+ENTRYPOINT ["dotnet", "Community_Portal.dll"]
