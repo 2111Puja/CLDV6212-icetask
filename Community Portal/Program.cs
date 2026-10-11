@@ -1,10 +1,3 @@
-/* Microsoft. 2026. Entity Framework Core DbContext Configuration and Initialization. [Online].
- * Available at: <https://learn.microsoft.com/en-us/ef/core/>
- * [Accessed 2 October 2026].*/
-
-using Microsoft.EntityFrameworkCore;
-using Community_Portal.Data;
-
 namespace Community_Portal
 {
     public class Program
@@ -16,15 +9,16 @@ namespace Community_Portal
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            // Register Supabase (PostgreSQL) Database Context
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
-
-            // 1. Add Swagger services
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
             var app = builder.Build();
+
+            // Create the database tables (and starter data) if they don't exist yet.
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                db.Database.EnsureCreated();
+            }
+
+            app.UseForwardedHeaders();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -47,6 +41,10 @@ namespace Community_Portal
             app.UseAuthorization();
 
             app.MapStaticAssets();
+
+            // Simple health check for Render and the CI pipeline
+            app.MapGet("/health", () => Results.Ok("Healthy"));
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")

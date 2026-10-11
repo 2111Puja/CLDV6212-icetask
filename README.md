@@ -2,12 +2,8 @@
 
 A web application that allows residents to report community problems such as **water leaks, potholes, and broken streetlights**, while enabling municipal staff to track, manage, and resolve service requests.
 
-**🌐 Live App:** [https://cldv6212-community-portal.onrender.com/](https://cldv6212-community-portal.onrender.com/)
-
-**📖 API Documentation (Swagger):** [https://cldv6212-community-portal.onrender.com/swagger](https://cldv6212-community-portal.onrender.com/swagger)
-*Locally: `http://localhost:8080/swagger`*
-
-> ⚠️ **Note:** The free hosting tier sleeps when idle, so the first load can take up to a minute.
+**Live app:** [ADD LIVE URL HERE]
+> The free hosting tier sleeps when idle, so the first load can take up to a minute.
 
 ---
 
@@ -21,33 +17,21 @@ Residents often have no simple way to report faults in their area or find out wh
 * **Municipal staff**, who need one place to see, prioritise, assign, and update requests.
 * **Local government**, which needs accountability and a record of response times.
 
-### 💡 Why It Matters
+**How the app helps**
+- Residents submit a report (issue type, description, location) and get a **reference number** to track it.
+- Residents can look up the status of any request with that reference number.
+- Staff log in to a **dashboard** showing all requests, filterable by status (Pending, In Progress, Resolved).
+- Staff open a request to update its **status, priority, assigned team and notes**.
 
-Unresolved infrastructure problems such as burst pipes and potholes can affect safety, cost more the longer they are ignored, and reduce public trust.
+> [Add 1-2 sources or statistics from your research here to back up the problem statement.]
 
 A transparent tracking system helps close the loop between the person reporting the issue and the team responsible for fixing it.
 
-### ✅ How the App Helps
+## 2. Architecture
 
-* Residents submit a report containing the **issue type, description, and location** and receive a **reference number** to track it.
-* Residents can look up the status of any request using its **reference number**.
-* Staff log in to a **dashboard** displaying all requests, which can be filtered by status:
+[UPDATE this section to match the final design. The description below is the current structure.]
 
-  * 🟡 Pending
-  * 🔵 In Progress
-  * 🟢 Resolved
-* Staff can open a request and update its:
-
-  * **Status**
-  * **Priority**
-  * **Assigned team**
-  * **Notes**
-
----
-
-## 🏗️ 2. Architecture
-
-```text
+```
 Browser
    |
    v
@@ -69,7 +53,49 @@ Database: Supabase PostgreSQL
 
 ---
 
-## 🚀 3. Run Locally
+## 3. Run Locally
+
+**Prerequisites:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) and Git.
+
+### 🌐 Live Application
+
+The deployed application is accessible at:
+**https://cldv6212-community-portal.onrender.com/**
+<img width="1905" height="850" alt="image" src="https://github.com/user-attachments/assets/8033b761-d473-4787-b4be-43e88ad71456" />
+
+<img width="1917" height="862" alt="image" src="https://github.com/user-attachments/assets/de7df77f-ef87-4ed0-84de-69f86f8f61c5" />
+
+<img width="1912" height="842" alt="image" src="https://github.com/user-attachments/assets/cb16ac02-9030-4ad7-ac08-0008cf1cd3f5" />
+
+<img width="1867" height="842" alt="image" src="https://github.com/user-attachments/assets/305c38fb-24e2-48b2-82e7-92fe9f86c56c" />
+
+<img width="1917" height="847" alt="image" src="https://github.com/user-attachments/assets/61df1320-fae3-4c7f-9b5f-17ab2474dcd8" />
+
+
+### 📖 Swagger API
+
+The Swagger API documentation is available through the deployed application:
+
+**https://cldv6212-community-portal.onrender.com/swagger**
+
+### ☁️ Render Deployment
+
+The application is deployed and running on Render.
+
+
+<img width="1478" height="272" alt="Screenshot 2026-10-03 150531" src="https://github.com/user-attachments/assets/e1e89fe2-035d-41f9-aaf6-f89a4e5725dd" />
+
+<img width="1917" height="797" alt="Screenshot 2026-10-03 151340" src="https://github.com/user-attachments/assets/da970ed9-e648-4228-9217-9093dae56ec6" />
+
+### 🗄️ Supabase PostgreSQL
+
+The application uses Supabase PostgreSQL as its cloud database.
+
+<img width="1915" height="341" alt="Screenshot 2026-10-03 152517" src="https://github.com/user-attachments/assets/7d268011-47c7-4e52-8d73-6c3afb526b02" />
+
+---
+
+## 🚀 4. Run Locally
 
 ### Prerequisites
 
@@ -83,27 +109,13 @@ Before running the application locally, make sure you have:
 ```bash
 git clone https://github.com/aminah-17/cloud-ice-task.git
 cd cloud-ice-task
-```
-
-### Configure Environment Variables
-
-Copy the example environment file:
-
-```bash
-cp .env.example .env
-```
-
-Then edit `.env` and enter the required values.
-
-### Start the Application
-
-```bash
+cp .env.example .env      # then edit the values in .env
 docker compose up --build
 ```
 
-Once the containers have started, open:
+Open **http://localhost:8080**.
 
-**🌐 Application:** http://localhost:8080
+To stop the stack: `docker compose down`.
 
 **📖 Swagger API Documentation:** http://localhost:8080/swagger
 
@@ -117,53 +129,31 @@ docker compose down
 
 ---
 
-## 🔐 4. Environment Variables
+## 4. Environment Variables
 
-Copy `.env.example` to `.env` and fill in the required values.
+Copy `.env.example` to `.env` and fill in real values. Never commit `.env`.
 
-> ⚠️ **Never commit `.env` to the repository.**
+| Variable | Purpose |
+|----------|---------|
+| `ASPNETCORE_ENVIRONMENT` | Runtime environment (`Development` or `Production`) |
+| `ASPNETCORE_HTTP_PORTS` | Port the app listens on inside the container (`8080`) |
+| `ConnectionStrings__Default` | [Database connection string, once the database is set up] |
 
-| Variable                     | Purpose                                                       |
-| ---------------------------- | ------------------------------------------------------------- |
-| `ASPNETCORE_ENVIRONMENT`     | Runtime environment (`Development` or `Production`)           |
-| `ASPNETCORE_HTTP_PORTS`      | Port the application listens on inside the container (`8080`) |
-| `ConnectionStrings__Default` | Supabase PostgreSQL connection string URI                     |
-
-Deployment secrets are stored securely in **GitHub Repository Secrets** and are not included in the source code.
+Secrets for deployment are stored in **GitHub Repository Secrets**, not in the code.
 
 ---
 
-## 🔄 5. CI/CD
+## 5. CI/CD
 
-The project uses an automated **GitHub Actions** pipeline configured under:
-
-```text
-.github/workflows/
-```
-
-On every push or pull request to the `main` branch, the pipeline automatically:
-
-1. 📦 Restores dependencies and builds the ASP.NET Core solution.
-2. 🐳 Builds and validates the Docker container configuration.
-3. 🚀 Triggers deployment updates to Render after successful verification.
+[Describe the GitHub Actions pipeline once it exists: build, tests, Docker build, security scan (CodeQL/Trivy), deploy on merge to `main`.]
 
 ---
 
-## 👩‍💻 6. Team and Contributions
+## 6. Team and Contributions
 
-| Member           | Main Contributions                                                                                                                                                             |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Puja Mahabir** | Full-stack MVC architecture, Supabase PostgreSQL database integration, Docker containerisation, Swashbuckle Swagger API documentation setup, and CI/CD workflow configuration. |
-| **Aminah Omer**  | Problem statement research, frontend views design, Docker containerisation, system structure documentation, readme and user workflow implementation.                                                           |
+| Member | Main contributions |
+|--------|--------------------|
+| Puja Mahabir |  |
+| Aminah Omer |  |
 
-### 🤝 Contribution Workflow
-
-All work is completed on **feature branches** and merged through reviewed **Pull Requests**.
-
----
-
-## 📌 Project Links
-
-* 🌐 **[Live Application](https://cldv6212-community-portal.onrender.com/)**
-* 📖 **[Swagger API Documentation](https://cldv6212-community-portal.onrender.com/swagger)**
-* 💻 **[GitHub Repository](https://github.com/aminah-17/cloud-ice-task)**
+All work is done on feature branches and merged through reviewed Pull Requests.

@@ -11,7 +11,6 @@ namespace Community_Portal.Data
         {
         }
 
-        // This represents your service requests table in Supabase
-        public DbSet<ServiceRequest> ServiceRequests { get; set; }
     }
 }
+
