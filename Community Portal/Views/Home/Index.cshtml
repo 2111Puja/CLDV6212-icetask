@@ -2,6 +2,69 @@
     ViewData["Title"] = "Home";
 }
 
+@* Home page styles. These classes are specific to this page and use the portal's navy/azure theme
+   variables from wwwroot/css/site.css (with fallbacks), so no other file needs to change. *@
+<style>
+    .text-navy { color: var(--primary-navy, #002a5c) !important; }
+
+    /* Hero banner */
+    .hero {
+        position: relative;
+        overflow: hidden;
+        padding: 3.5rem 2rem;
+        border-radius: 16px;
+        color: #ffffff;
+        background: linear-gradient(135deg, #001a3a 0%, var(--primary-navy, #002a5c) 55%, var(--azure-blue, #0078d4) 130%);
+    }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            right: -80px;
+            top: -80px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .hero h1 { font-weight: 700; letter-spacing: -0.5px; }
+        .hero .lead { color: #cfe0f5; max-width: 640px; }
+
+    /* "How it works" cards */
+    .feature-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--azure-blue, #0078d4);
+        background: rgba(0, 120, 212, 0.12);
+    }
+
+    .step-number {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #ffffff;
+        background: var(--primary-navy, #002a5c);
+    }
+
+    .hover-lift { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+    .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 42, 92, 0.14) !important; }
+
+    @@media (max-width: 575.98px) {
+        .hero { padding: 2.25rem 1.25rem; }
+    }
+</style>
+
 <section class="hero mb-5 shadow">
     <div class="position-relative" style="z-index:2">
         <span class="badge rounded-pill text-bg-light text-navy mb-3 px-3 py-2"><i class="bi bi-patch-check-fill me-1"></i> Official municipal service channel</span>
