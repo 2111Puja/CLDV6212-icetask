@@ -18,7 +18,7 @@ namespace Community_Portal
 
             // Register Supabase (PostgreSQL) Database Context
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
             // 1. Add Swagger services
             builder.Services.AddEndpointsApiExplorer();
