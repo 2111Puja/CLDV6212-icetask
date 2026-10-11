@@ -1,62 +1,34 @@
 /* Microsoft. 2026. ASP.NET Core MVC Controllers and Action Results Overview. [Online].
  * Available at: <https://learn.microsoft.com/en-us/aspnet/core/mvc/controllers/actions>
  * [Accessed 2 October 2026].
- * 
+ *
  * Microsoft. 2026. Model Binding in ASP.NET Core. [Online].
  * Available at: <https://learn.microsoft.com/en-us/aspnet/core/mvc/models/model-binding>
  * [Accessed 2 October 2026].*/
 
+using Community_Portal.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using CommunityPortal.Web.Models;
 
 namespace Community_Portal.Controllers
 {
     public class StaffController : Controller
     {
-        // Mock dataset mapped directly to CommunityPortal.Web.Models.ServiceRequest
-        private static readonly List<ServiceRequest> MockRequests = new()
+        private readonly ApplicationDbContext _context;
+
+        // The dashboard reads the same Supabase table that residents submit their reports into,
+        // so every report entered on "Report a Problem" appears here.
+        public StaffController(ApplicationDbContext context)
         {
-            new ServiceRequest
-            {
-                ReferenceNumber = "RPT-2026-000123",
-                IssueType = "Water Leak / Pipe Burst",
-                Location = "123 Main Road, Central",
-                Status = RequestStatus.InProgress,
-                Priority = PriorityLevel.High,
-                SubmittedOn = DateTime.Parse("2026-05-18"),
-                Description = "Major water leak near the public library flooding the pavement.",
-                AssignedTeam = "Water & Sanitation Unit B",
-                StaffNotes = "Technicians dispatched to isolate the main valve."
-            },
-            new ServiceRequest
-            {
-                ReferenceNumber = "RPT-2026-000124",
-                IssueType = "Pothole / Road Repair",
-                Location = "45 Elm Street, North Ward",
-                Status = RequestStatus.Pending,
-                Priority = PriorityLevel.Medium,
-                SubmittedOn = DateTime.Parse("2026-05-19"),
-                Description = "Large pothole in the left lane causing traffic hazard.",
-                AssignedTeam = "Unassigned"
-            },
-            new ServiceRequest
-            {
-                ReferenceNumber = "RPT-2026-000125",
-                IssueType = "Broken Streetlight",
-                Location = "Corner 5th Ave & Pine St",
-                Status = RequestStatus.Resolved,
-                Priority = PriorityLevel.Low,
-                SubmittedOn = DateTime.Parse("2026-05-15"),
-                Description = "Streetlight flickering and completely dark at night.",
-                AssignedTeam = "Electrical Services Team 1"
-            }
-        };
+            _context = context;
+        }
 
         // GET: /Staff/Dashboard
         [HttpGet]
-        public IActionResult Dashboard(string statusFilter)
+        public async Task<IActionResult> Dashboard(string? statusFilter)
         {
-            var requests = MockRequests.AsEnumerable();
+            var requests = _context.ServiceRequests.AsNoTracking().AsQueryable();
 
             if (!string.IsNullOrEmpty(statusFilter) && !statusFilter.Equals("All", StringComparison.OrdinalIgnoreCase))
             {
@@ -66,25 +38,32 @@ namespace Community_Portal.Controllers
                 }
             }
 
+            // Summary counters always reflect the whole table, not just the filtered rows
             ViewBag.CurrentFilter = statusFilter ?? "All";
-            ViewBag.TotalCount = MockRequests.Count;
-            ViewBag.PendingCount = MockRequests.Count(r => r.Status == RequestStatus.Pending);
-            ViewBag.InProgressCount = MockRequests.Count(r => r.Status == RequestStatus.InProgress);
-            ViewBag.ResolvedCount = MockRequests.Count(r => r.Status == RequestStatus.Resolved);
+            ViewBag.TotalCount = await _context.ServiceRequests.CountAsync();
+            ViewBag.PendingCount = await _context.ServiceRequests.CountAsync(r => r.Status == RequestStatus.Pending);
+            ViewBag.InProgressCount = await _context.ServiceRequests.CountAsync(r => r.Status == RequestStatus.InProgress);
+            ViewBag.ResolvedCount = await _context.ServiceRequests.CountAsync(r => r.Status == RequestStatus.Resolved);
 
-            return View(requests.ToList());
+            // Newest reports first
+            var list = await requests.OrderByDescending(r => r.SubmittedOn).ToListAsync();
+
+            return View(list);
         }
 
         // GET: /Staff/Details/RPT-2026-000123
         [HttpGet]
-        public IActionResult Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
                 return NotFound();
             }
 
-            var request = MockRequests.FirstOrDefault(r => r.ReferenceNumber.Equals(id, StringComparison.OrdinalIgnoreCase));
+            var lookup = id.Trim().ToUpperInvariant();
+            var request = await _context.ServiceRequests
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.ReferenceNumber == lookup);
 
             if (request == null)
             {
@@ -97,12 +76,18 @@ namespace Community_Portal.Controllers
         // POST: /Staff/UpdateStatus
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpdateStatus(ServiceRequest model, string referenceNumber)
+        public async Task<IActionResult> UpdateStatus(ServiceRequest model, string referenceNumber)
         {
             // Fallback for key identification
             string targetRef = !string.IsNullOrEmpty(model.ReferenceNumber) ? model.ReferenceNumber : referenceNumber;
 
-            var request = MockRequests.FirstOrDefault(r => r.ReferenceNumber.Equals(targetRef, StringComparison.OrdinalIgnoreCase));
+            if (string.IsNullOrEmpty(targetRef))
+            {
+                return NotFound();
+            }
+
+            var lookup = targetRef.Trim().ToUpperInvariant();
+            var request = await _context.ServiceRequests.FirstOrDefaultAsync(r => r.ReferenceNumber == lookup);
 
             if (request != null)
             {
@@ -119,6 +104,9 @@ namespace Community_Portal.Controllers
                 {
                     request.AssignedTeam = model.AssignedTeam;
                 }
+
+                // Save the change to the database so residents see it on the Track page
+                await _context.SaveChangesAsync();
 
                 TempData["SuccessMessage"] = $"Request {targetRef} updated successfully.";
             }

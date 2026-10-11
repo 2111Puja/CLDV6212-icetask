@@ -6,6 +6,7 @@ using Community_Portal.Data;
 using Community_Portal.Models;
 using CommunityPortal.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Community_Portal.Controllers
 {
@@ -48,9 +49,8 @@ namespace Community_Portal.Controllers
             _context.ServiceRequests.Add(serviceRequest);
             await _context.SaveChangesAsync();
 
-            // Pass confirmation message and reference number to the view
-            ViewBag.Message = "Report submitted successfully!";
-            ViewBag.ReferenceNumber = generatedReference;
+            // TempData survives the redirect below (ViewBag does not), so the Track page can show the confirmation
+            TempData["SuccessMessage"] = "Report submitted successfully! Keep your reference number to follow its progress.";
 
             // Redirect directly to the tracking page with the new reference number
             return RedirectToAction("Track", new { referenceNumber = generatedReference });
@@ -58,11 +58,35 @@ namespace Community_Portal.Controllers
 
         // GET: /ServiceRequest/Track
         [HttpGet]
-        public IActionResult Track(string referenceNumber)
+        public async Task<IActionResult> Track(string? referenceNumber)
         {
-            // Pass the reference number to Track.cshtml
-            ViewData["ReferenceNumber"] = referenceNumber;
-            return View();
+            // Pass the reference number to Track.cshtml so the search box keeps what was typed
+            var searchedReference = referenceNumber?.Trim();
+            ViewData["ReferenceNumber"] = searchedReference;
+
+            ServiceRequest? serviceRequest = null;
+
+            if (!string.IsNullOrEmpty(searchedReference))
+            {
+                // References are stored in upper case (RPT-2026-123456), so make the lookup case-insensitive
+                var lookup = searchedReference.ToUpperInvariant();
+
+                try
+                {
+                    // Load the exact report the resident submitted from the database
+                    serviceRequest = await _context.ServiceRequests
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(r => r.ReferenceNumber == lookup);
+                }
+                catch (Exception)
+                {
+                    // Show a friendly message on the page instead of a 500 error
+                    ViewData["LookupError"] = "We could not look up your report right now. Please try again in a moment.";
+                }
+            }
+
+            // Null when nothing was searched for, or when no report matches the reference number
+            return View(serviceRequest);
         }
     }
 }

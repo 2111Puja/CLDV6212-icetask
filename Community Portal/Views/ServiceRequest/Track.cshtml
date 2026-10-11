@@ -1,14 +1,48 @@
-﻿@{
+@model CommunityPortal.Web.Models.ServiceRequest?
+@using CommunityPortal.Web.Models
+
+@{
     ViewData["Title"] = "Track Your Report";
-    
-    // Demo state check for prototype representation
+
+    // The reference number typed into the search box (or passed in after submitting a report)
     var referenceNumber = ViewData["ReferenceNumber"] as string;
     var hasSearched = !string.IsNullOrEmpty(referenceNumber);
+    var lookupError = ViewData["LookupError"] as string;
+
+    // Progress through the three stages, driven by the real status stored in the database:
+    // 0 = Submitted, 1 = In Progress, 2 = Resolved
+    var step = Model?.Status switch
+    {
+        RequestStatus.InProgress => 1,
+        RequestStatus.Resolved => 2,
+        RequestStatus.Closed => 2,
+        _ => 0
+    };
+    var progressWidth = step * 50;
+
+    // Badge colour for the current status
+    var badgeClass = step switch
+    {
+        1 => "bg-warning text-dark",
+        2 => "bg-success",
+        _ => "bg-primary"
+    };
+
+    // Times are stored in UTC; South Africa (SAST) is UTC+2 all year round
+    var submittedLocal = Model?.SubmittedOn.ToUniversalTime().AddHours(2);
 }
 
 <div class="row justify-content-center">
     <div class="col-lg-9 col-md-11">
-        
+
+        @if (TempData["SuccessMessage"] is string successMessage)
+        {
+            <!-- Confirmation shown right after a report is submitted -->
+            <div class="alert alert-success shadow-sm" role="alert">
+                @successMessage
+            </div>
+        }
+
         <!-- Header & Search Box -->
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body p-4 text-center">
@@ -17,7 +51,7 @@
 
                 <form asp-controller="ServiceRequest" asp-action="Track" method="get" class="row g-2 justify-content-center">
                     <div class="col-sm-7 col-md-6">
-                        <input type="text" name="referenceNumber" class="form-control form-control-lg border-primary" 
+                        <input type="text" name="referenceNumber" class="form-control form-control-lg border-primary"
                                placeholder="e.g., RPT-2026-000123" value="@referenceNumber" required />
                     </div>
                     <div class="col-sm-auto">
@@ -27,27 +61,31 @@
             </div>
         </div>
 
-        @if (hasSearched)
+        @if (lookupError != null)
+        {
+            <div class="alert alert-warning shadow-sm" role="alert">@lookupError</div>
+        }
+        else if (hasSearched && Model != null)
         {
             <!-- Results Section -->
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header bg-light p-3 d-flex justify-content-between align-items-center">
                     <div>
                         <span class="text-muted small d-block">Reference Number</span>
-                        <strong class="fs-5 text-navy">@referenceNumber</strong>
+                        <strong class="fs-5 text-navy">@Model.ReferenceNumber</strong>
                     </div>
                     <div>
-                        <span class="badge bg-warning text-dark px-3 py-2 fs-6">In Progress</span>
+                        <span class="badge @badgeClass px-3 py-2 fs-6">@Model.StatusDisplayName</span>
                     </div>
                 </div>
 
                 <div class="card-body p-4">
-                    
+
                     <!-- Progress Stepper -->
                     <h6 class="fw-bold text-uppercase text-muted mb-4">Resolution Progress</h6>
                     <div class="position-relative mb-5 px-3">
                         <div class="progress" style="height: 4px;">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: @(progressWidth)%;" aria-valuenow="@progressWidth" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
 
                         <div class="d-flex justify-content-between position-relative" style="margin-top: -18px;">
@@ -56,53 +94,78 @@
                                     <i class="bi bi-check-lg">✓</i>
                                 </div>
                                 <div class="fw-bold mt-2 small">Submitted</div>
-                                <div class="text-muted extra-small">18 May 2026, 10:30 AM</div>
+                                <div class="text-muted extra-small">@(submittedLocal?.ToString("dd MMM yyyy, hh:mm tt"))</div>
                             </div>
 
                             <div class="text-center">
-                                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                                    <i class="bi bi-gear-fill">⚙</i>
+                                <div class="rounded-circle @(step >= 1 ? "bg-primary" : "bg-secondary") text-white d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                    @if (step >= 1) { <i class="bi bi-gear-fill">⚙</i> } else { <span>2</span> }
                                 </div>
-                                <div class="fw-bold mt-2 small text-primary">In Progress</div>
-                                <div class="text-muted extra-small">19 May 2026, 08:15 AM</div>
+                                <div class="fw-bold mt-2 small @(step >= 1 ? "text-primary" : "text-muted")">In Progress</div>
+                                <div class="text-muted extra-small">@(step >= 1 ? "Municipal team working on it" : "Waiting to be picked up")</div>
                             </div>
 
                             <div class="text-center">
-                                <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                                    3
+                                <div class="rounded-circle @(step >= 2 ? "bg-success" : "bg-secondary") text-white d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                    @if (step >= 2) { <i class="bi bi-check-lg">✓</i> } else { <span>3</span> }
                                 </div>
-                                <div class="fw-bold mt-2 small text-muted">Resolved</div>
-                                <div class="text-muted extra-small">Pending completion</div>
+                                <div class="fw-bold mt-2 small @(step >= 2 ? "text-success" : "text-muted")">Resolved</div>
+                                <div class="text-muted extra-small">@(step >= 2 ? "Completed" : "Pending completion")</div>
                             </div>
                         </div>
                     </div>
 
                     <hr class="my-4" />
 
-                    <!-- Issue Details Summary -->
+                    <!-- Issue Details Summary: exactly what was entered on the Report a Problem form -->
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="text-muted small fw-bold">ISSUE TYPE</label>
-                            <p class="fw-medium text-dark">Water Leak / Pipe Burst</p>
+                            <p class="fw-medium text-dark">@Model.IssueType</p>
                         </div>
                         <div class="col-md-6">
                             <label class="text-muted small fw-bold">LOCATION</label>
-                            <p class="fw-medium text-dark">123 Main Road, Example Town</p>
+                            <p class="fw-medium text-dark">@Model.Location</p>
                         </div>
                         <div class="col-12">
                             <label class="text-muted small fw-bold">DESCRIPTION</label>
-                            <p class="fw-medium text-dark">There is a significant water leak on the main road near the community center flooding the pavement.</p>
+                            <p class="fw-medium text-dark" style="white-space: pre-line;">@Model.Description</p>
                         </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">PRIORITY</label>
+                            <p class="fw-medium text-dark">@Model.Priority</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">ASSIGNED TEAM</label>
+                            <p class="fw-medium text-dark">@Model.AssignedTeam</p>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(Model.StaffNotes))
+                        {
+                            <div class="col-12">
+                                <div class="alert alert-info mb-0">
+                                    <label class="text-muted small fw-bold d-block">UPDATE FROM THE MUNICIPALITY</label>
+                                    <span style="white-space: pre-line;">@Model.StaffNotes</span>
+                                </div>
+                            </div>
+                        }
                     </div>
 
                 </div>
+            </div>
+        }
+        else if (hasSearched)
+        {
+            <!-- No report matches the reference number that was entered -->
+            <div class="card border-0 bg-light p-4 text-center">
+                <h5 class="fw-bold text-navy">No report found for "@referenceNumber"</h5>
+                <p class="text-muted mb-0">Please check the reference number (it looks like RPT-2026-123456) and try again.</p>
             </div>
         }
         else
         {
             <!-- Informational Placeholder -->
             <div class="card border-0 bg-light p-4 text-center">
-                <p class="text-muted mb-0">Enter a valid reference number above to view real-time municipal status updates, assigned work crews, and completion records[cite: 1].</p>
+                <p class="text-muted mb-0">Enter a valid reference number above to view real-time municipal status updates, assigned work crews, and completion records.</p>
             </div>
         }
 
