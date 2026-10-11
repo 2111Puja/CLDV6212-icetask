@@ -66,19 +66,20 @@ namespace Community_Portal
             });
 
             app.UseHttpsRedirection();
+
+            // Replaced MapStaticAssets with UseStaticFiles to correctly serve wwwroot assets in containers
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.MapStaticAssets();
 
             // Simple health check for Render and the CI pipeline
             app.MapGet("/health", () => Results.Ok("Healthy"));
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
-                .WithStaticAssets();
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }
