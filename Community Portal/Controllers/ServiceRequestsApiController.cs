@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Community_Portal.Data;
+using CommunityPortal.Web.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Community_Portal.Data;
-using Community_Portal.Models;
 
 namespace Community_Portal.Controllers
 {
@@ -28,7 +28,7 @@ namespace Community_Portal.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ServiceRequest>> GetServiceRequest(int id)
+        public async Task<ActionResult<ServiceRequest>> GetServiceRequest(string id)
         {
             var serviceRequest = await _context.ServiceRequests.FindAsync(id);
 
