@@ -12,6 +12,13 @@ namespace Community_Portal
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // Register ApplicationDbContext with PostgreSQL for Supabase
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                                   ?? Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseNpgsql(connectionString));
+
             var app = builder.Build();
 
             // Create the database tables (and starter data) if they don't exist yet.
