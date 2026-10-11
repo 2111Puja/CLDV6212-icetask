@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Community_Portal</RootNamespace>
+    <AssemblyName>Community_Portal</AssemblyName>
     <UserSecretsId>534790f9-7250-4237-ab73-74c90539dd26</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
