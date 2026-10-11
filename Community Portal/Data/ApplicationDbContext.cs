@@ -11,6 +11,6 @@ namespace Community_Portal.Data
         {
         }
 
+        public DbSet<ServiceRequest> ServiceRequests { get; set; }
     }
 }
-
