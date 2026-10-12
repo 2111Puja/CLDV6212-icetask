@@ -79,15 +79,30 @@ The deployed application is accessible at:
 
 **https://cldv6212-community-portal.onrender.com/**
 
-<!-- Add your live application screenshot here -->
+<img width="1917" height="867" alt="image" src="https://github.com/user-attachments/assets/63137eee-c0b3-43a1-b6a1-6b1caf712308" />
+
+<img width="1917" height="867" alt="image" src="https://github.com/user-attachments/assets/996bce2e-2d98-448b-9d6f-d08e8f041ac2" />
+
+<img width="1917" height="860" alt="image" src="https://github.com/user-attachments/assets/fbfb47dd-d9a2-43e8-a2b3-5b0adf3719c5" />
+
+<img width="1906" height="862" alt="image" src="https://github.com/user-attachments/assets/2b569c25-b472-4def-8920-208dbe56bced" />
+
+<img width="1917" height="862" alt="image" src="https://github.com/user-attachments/assets/d179dddb-9794-4a29-99ef-33ad496eda12" />
+
+<img width="1917" height="856" alt="image" src="https://github.com/user-attachments/assets/271baa3c-e382-4200-a62c-23eab07529b0" />
+
+<img width="1917" height="862" alt="image" src="https://github.com/user-attachments/assets/aa76ef92-a91c-4cff-a87f-c95484395838" />
+
+
 
 ### 📖 Swagger API
 
 The Swagger API documentation is available through the deployed application:
 
 **https://cldv6212-community-portal.onrender.com/swagger**
+<img width="1917" height="957" alt="image" src="https://github.com/user-attachments/assets/8d63e5de-7ffd-4628-84bb-637dc20a7a4d" />
 
-<!-- Add your Swagger screenshot here -->
+<img width="1912" height="806" alt="image" src="https://github.com/user-attachments/assets/428f4aaf-f841-4837-a193-c47dc0818f6b" />
 
 ### ☁️ Render Deployment
 
@@ -99,7 +114,7 @@ The application is deployed and running on Render.
 
 The application uses Supabase PostgreSQL as its cloud database.
 
-<!-- Add your Supabase screenshot here -->
+<img width="1917" height="862" alt="image" src="https://github.com/user-attachments/assets/e1d75acf-5996-4103-b7d8-0d9b553291a3" />
 
 ---
 
