@@ -45,6 +45,18 @@
                     </div>
                 </div>
             </form>
+
+            <hr class="mt-4" />
+
+            <!-- Danger zone: permanently delete this report -->
+            <form asp-controller="Staff" asp-action="Delete" method="post"
+                  onsubmit="return confirm('Delete report @Model.ReferenceNumber permanently? This cannot be undone.');">
+                <input type="hidden" name="referenceNumber" value="@Model.ReferenceNumber" />
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted small">Use for spam, duplicates or test entries. Residents will no longer be able to track this report.</span>
+                    <button type="submit" class="btn btn-outline-danger">Delete report</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

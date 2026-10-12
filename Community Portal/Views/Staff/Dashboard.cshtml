@@ -10,6 +10,15 @@
         <span class="badge bg-secondary">Total Reports: @Model.Count()</span>
     </div>
 
+    @if (TempData["SuccessMessage"] is string successMessage)
+    {
+        <div class="alert alert-success shadow-sm" role="alert">@successMessage</div>
+    }
+    @if (TempData["ErrorMessage"] is string errorMessage)
+    {
+        <div class="alert alert-warning shadow-sm" role="alert">@errorMessage</div>
+    }
+
     <div class="table-responsive card shadow-sm">
         <table class="table table-hover mb-0 align-middle">
             <thead class="table-dark">

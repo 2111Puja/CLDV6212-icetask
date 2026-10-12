@@ -113,5 +113,32 @@ namespace Community_Portal.Controllers
 
             return RedirectToAction("Dashboard");
         }
+
+        // POST: /Staff/Delete
+        // Permanently removes a report (spam, duplicates, test data). POST + antiforgery so it can't be triggered by a link.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(string referenceNumber)
+        {
+            if (string.IsNullOrWhiteSpace(referenceNumber))
+            {
+                return NotFound();
+            }
+
+            var lookup = referenceNumber.Trim().ToUpperInvariant();
+            var request = await _context.ServiceRequests.FirstOrDefaultAsync(r => r.ReferenceNumber == lookup);
+
+            if (request == null)
+            {
+                TempData["ErrorMessage"] = $"Report {lookup} could not be found. It may already have been deleted.";
+                return RedirectToAction("Dashboard");
+            }
+
+            _context.ServiceRequests.Remove(request);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Report {lookup} was deleted.";
+            return RedirectToAction("Dashboard");
+        }
     }
 }
