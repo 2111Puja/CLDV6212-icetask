@@ -83,6 +83,8 @@ The deployed application is accessible at:
 
 <img width="1917" height="867" alt="image" src="https://github.com/user-attachments/assets/996bce2e-2d98-448b-9d6f-d08e8f041ac2" />
 
+<img width="1917" height="862" alt="image" src="https://github.com/user-attachments/assets/d33c537d-ecc5-4757-b156-4afa1c8477a5" />
+
 <img width="1917" height="860" alt="image" src="https://github.com/user-attachments/assets/fbfb47dd-d9a2-43e8-a2b3-5b0adf3719c5" />
 
 <img width="1906" height="862" alt="image" src="https://github.com/user-attachments/assets/2b569c25-b472-4def-8920-208dbe56bced" />
